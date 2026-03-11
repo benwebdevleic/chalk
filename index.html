@@ -343,14 +343,13 @@ function presentation() {
 
     // ── Serialisation ──────────────────────────────
     encodeSlides(slides) {
-      return slides.map(s => `${encodeURIComponent(s.text)}::${s.color}`).join('|');
+      return encodeURIComponent(JSON.stringify(slides));
     },
 
     decodeSlides(str) {
-      return str.split('|').map(s => {
-        const [text, color] = s.split('::');
-        return { text: decodeURIComponent(text || ''), color: color || '#1a1a2e' };
-      }).filter(s => s.text);
+      try {
+        return JSON.parse(decodeURIComponent(str)).filter(s => s.text);
+      } catch { return null; }
     },
 
     defaultSlides() {
@@ -362,11 +361,20 @@ function presentation() {
     },
 
     // ── Lifecycle ──────────────────────────────────
+    // ── Persistence ────────────────────────────────
+    save() {
+      const encoded = this.encodeSlides(this.slides);
+      localStorage.setItem('chalk_slides', encoded);
+      history.replaceState(null, '', `${location.pathname}?slides=${encoded}`);
+    },
+
     init() {
-      const raw = new URLSearchParams(location.search).get('slides');
+      const raw = new URLSearchParams(location.search).get('slides')
+                  || localStorage.getItem('chalk_slides');
       this.slides = (raw ? this.decodeSlides(raw) : null) || this.defaultSlides();
       this.hexInput = this.currentSlide.color;
       this.$watch('current', () => { this.hexInput = this.currentSlide.color; });
+      this.$watch('slides', () => { this.save(); }, { deep: true });
     },
 
     // ── Navigation ─────────────────────────────────
