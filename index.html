@@ -206,6 +206,17 @@
   }
   #share-btn:hover { background: #fff; }
   #share-btn:active { transform: scale(0.98); }
+  #new-btn {
+    width: 100%; padding: 9px; margin-top: 8px;
+    background: transparent; color: rgba(255,255,255,0.25);
+    border: 1px solid rgba(255,255,255,0.08); border-radius: 8px; cursor: pointer;
+    font-family: 'DM Mono', monospace; font-size: 0.72rem;
+    letter-spacing: 0.06em;
+    transition: background 0.15s, color 0.15s, transform 0.1s;
+  }
+  #new-btn:hover { background: rgba(255,255,255,0.05); color: rgba(255,255,255,0.5); }
+  #new-btn:active { transform: scale(0.98); }
+
   #share-feedback {
     font-size: 0.65rem; color: rgba(255,255,255,0.35);
     text-align: center; margin-top: 6px; min-height: 1em;
@@ -302,6 +313,7 @@
     <div id="share-section">
       <button id="share-btn" @click="copyShareLink()">Copy share link</button>
       <div id="share-feedback" x-text="shareFeedback"></div>
+      <button id="new-btn" @click="newPresentation()">+ New presentation</button>
     </div>
 
   </div>
@@ -365,7 +377,11 @@ function presentation() {
     save() {
       const encoded = this.encodeSlides(this.slides);
       localStorage.setItem('chalk_slides', encoded);
-      history.replaceState(null, '', `${location.pathname}?slides=${encoded}`);
+      try {
+        history.replaceState(null, '', `${location.pathname}?slides=${encoded}`);
+      } catch (e) {
+        // replaceState not available in this environment (e.g. sandboxed iframe)
+      }
     },
 
     init() {
@@ -419,6 +435,11 @@ function presentation() {
         this.currentSlide.color = clean;
         this.hexInput = clean;
       }
+    },
+
+    // ── New presentation ───────────────────────────
+    newPresentation() {
+      window.open(location.pathname, '_blank');
     },
 
     // ── Share ──────────────────────────────────────
