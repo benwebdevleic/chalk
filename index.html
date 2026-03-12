@@ -373,24 +373,20 @@ function presentation() {
     },
 
     // ── Lifecycle ──────────────────────────────────
-    // ── Persistence ────────────────────────────────
-    save() {
-      const encoded = this.encodeSlides(this.slides);
-      localStorage.setItem('chalk_slides', encoded);
+    updateURL() {
       try {
-        history.replaceState(null, '', `${location.pathname}?slides=${encoded}`);
+        history.replaceState(null, '', `${location.pathname}?slides=${this.encodeSlides(this.slides)}`);
       } catch (e) {
-        // replaceState not available in this environment (e.g. sandboxed iframe)
+        // not available in sandboxed environments
       }
     },
 
     init() {
-      const raw = new URLSearchParams(location.search).get('slides')
-                  || localStorage.getItem('chalk_slides');
+      const raw = new URLSearchParams(location.search).get('slides');
       this.slides = (raw ? this.decodeSlides(raw) : null) || this.defaultSlides();
       this.hexInput = this.currentSlide.color;
       this.$watch('current', () => { this.hexInput = this.currentSlide.color; });
-      this.$watch('slides', () => { this.save(); }, { deep: true });
+      this.$watch('slides', () => { this.updateURL(); }, { deep: true });
     },
 
     // ── Navigation ─────────────────────────────────
