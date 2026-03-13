@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Present</title>
+<title>Chalk</title>
 <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
 <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
@@ -235,6 +235,7 @@
     pointer-events: none;
   }
 </style>
+<script defer src="https://cloud.umami.is/script.js" data-website-id="c1c38e66-3345-456c-805f-263a0b352a2f"></script>
 </head>
 <body x-data="presentation()" x-init="init()" @keydown.window="onKey($event)">
 
@@ -366,9 +367,9 @@ function presentation() {
 
     defaultSlides() {
       return [
-        { text: "Hello world, I'm chalk! A simple presentation tool.", color: '#1a1a2e' },
-        { text: 'No accounts. No installs. Just write your slides and share the link.', color: '#16213e' },
-        { text: 'Click \u2630 to edit your slides.', color: '#2d6a4f' },
+        { text: `Hello world, I'm chalk! A simple presentation tool.`, color: '#1a1a2e' },
+        { text: `Your entire presentation is stored in the URL. Copy the link and it's saved forever — no account, no server, nothing to lose.`, color: '#16213e' },
+        { text: `Click ☰ to edit your slides.`, color: '#2d6a4f' },
       ];
     },
 
